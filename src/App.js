@@ -8,19 +8,25 @@ import Header from './components/Header';
 import SelectBox from "./components/SelectBox";
 import EndModal from './components/EndModal';
 
-import { savePokemon, fetchPokemon } from './firebase';
-import { setSelectionRange } from '@testing-library/user-event/dist/utils';
+import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc} from './firebase';
 
 function App() {
   const [status, setStatus] = useState("intro");
   const [startTime, setStartTime] = useState(null);
   const [scoreMillis, setScoreMillis] = useState(0);
+  const [highScore, setHighScore] = useState(null);
   const [selection, setSelection] = useState({ visible: false });
   const [characters, setCharacters] = useState([]);
 
   //only triggers on doc load
   useEffect(() => {
     fetchPokemon().then(pokemon => setCharacters(pokemon));
+    signIn()
+      .then(() => getHighscoreDoc())
+      .then(highScore => {
+        setHighScore(highScore);
+        console.log(highScore);
+      });
   }, [])
 
   const startGame = () => {
@@ -29,7 +35,6 @@ function App() {
   }
 
   const onBackgroundClick = (e) => {
-    console.log(e);
     setSelection({
       visible: true,
       x: e.nativeEvent.offsetX,
@@ -56,7 +61,7 @@ function App() {
         if (character === selectedCharacter) {
           return { ...character, found: true }
         } else {
-          return character;
+          return { ...character, found: true }; //TODO replace
         }
       }));
     }
@@ -69,6 +74,10 @@ function App() {
       setStatus("ended");
     }
   }, [characters])
+
+  const submitHighscore = (name, newHighScore) => {
+    submitHighscoreDoc(name, newHighScore).then(() => console.log("success"));
+  }
 
   if (status === "intro") {
     return (
@@ -89,7 +98,7 @@ function App() {
   } else if (status === "ended") {
     return (
       <div className="App">
-        <EndModal onClick={startGame} scoreMillis={scoreMillis} />
+        <EndModal onSubmitHighScore={submitHighscore} scoreMillis={scoreMillis} highScore={highScore} />
         <Header characters={characters} />
         <GameBackground onClick={onBackgroundClick} />
       </div>

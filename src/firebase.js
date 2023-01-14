@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 
-import { getFirestore, collection, getDocs, addDoc, doc, query } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, setDoc, doc, query, getDoc } from 'firebase/firestore/lite';
+import {getAuth, signInAnonymously} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDfZ6x1npJrfWBZHKA6MhzxPD0lcdaEeYw",
@@ -43,13 +44,37 @@ async function fetchPokemon() {
     return randomIndexes.map(index => Pokemon(querySnapshot.docs.at(index).data()));
 }
 
-async function savePokemon(pokemon) {
+/*async function savePokemon(pokemon) {
     try {
         await addDoc(collection(getFirestore(), 'pokemon'), pokemon);
         console.log("success");
       } catch(error) {
         console.error('Error writing new message to Firebase Database', error);
       }
+}*/
+
+async function signIn() {
+    await signInAnonymously(getAuth());
+ }
+
+async function getHighscoreDoc() {
+    try {
+        let docSnap = await getDoc(doc(getFirestore(), 'highscores', getAuth().currentUser.uid));
+        if (docSnap.exists()) {
+            return docSnap.data();
+        }
+    } catch(error) {
+        console.error('Error reading score from Firebase Database', error);
+    }
+    return {name: "", score: 99999999999};
 }
 
-export {fetchPokemon, savePokemon};
+async function submitHighscoreDoc(name, score) {
+    try {
+        await setDoc(doc(getFirestore(), 'highscores', getAuth().currentUser.uid), {name, score});
+    } catch(error) {
+        console.error('Error reading score from Firebase Database', error);
+    }
+}
+
+export {fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc};
