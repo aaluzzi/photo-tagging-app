@@ -19,15 +19,26 @@ html, body {
   color: white;
   justify-content: space-evenly;
   font-size: 100%;
-  width: 30rem;
+  width: 35rem;
+  height: 100%;
 }
 
 .character-info {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 33%;
+}
+
+.sprite {
+  min-height: 100%;
+  aspect-ratio: 1;
+  background-size: cover;
+  /* border: 1px solid white; */
+}
+
+.found {
+  filter: brightness(50%);
 }
 
 img {
