@@ -6,11 +6,15 @@ import StartModal from './components/StartModal'
 import GameBackground from './components/GameBackground';
 import Header from './components/Header';
 import SelectBox from "./components/SelectBox";
+import EndModal from './components/EndModal';
 
 import { savePokemon, fetchPokemon } from './firebase';
+import { setSelectionRange } from '@testing-library/user-event/dist/utils';
 
 function App() {
-  const [playing, setPlaying] = useState(false);
+  const [status, setStatus] = useState("intro");
+  const [startTime, setStartTime] = useState(null);
+  const [scoreMillis, setScoreMillis] = useState(0);
   const [selection, setSelection] = useState({ visible: false });
   const [characters, setCharacters] = useState([]);
 
@@ -20,8 +24,8 @@ function App() {
   }, [])
 
   const startGame = () => {
-    setPlaying(true);
-    //TODO start timer
+    setStatus("playing");
+    setStartTime(Date.now());
   }
 
   const onBackgroundClick = (e) => {
@@ -56,20 +60,25 @@ function App() {
         }
       }));
     }
-    /*savePokemon({name: selectedCharacter.name, 
-      startCoords: [selectedCharacter.startX, selectedCharacter.startY], 
-      endCoords: [selectedCharacter.endX, selectedCharacter.endY]
-    });*/
     setSelection({ ...selection, visible: false });
   }
 
   useEffect(() => {
-    if (playing && characters.every(character => character.found)) {
-      alert("You win!");
+    if (status === "playing" && characters.every(character => character.found)) {
+      setScoreMillis(Date.now() - startTime);
+      setStatus("ended");
     }
   }, [characters])
 
-  if (playing) {
+  if (status === "intro") {
+    return (
+      <div className="App">
+        <StartModal onClick={startGame} characters={characters} />
+        <Header characters={characters} />
+        <GameBackground onClick={onBackgroundClick} />
+      </div>
+    );
+  } else if (status === "playing") {
     return (
       <div className="App">
         <Header characters={characters} />
@@ -77,10 +86,10 @@ function App() {
         <SelectBox onClick={onSelectBoxSelect} characters={characters} visible={selection.visible} x={selection.boxX} y={selection.boxY} />
       </div>
     );
-  } else {
+  } else if (status === "ended") {
     return (
       <div className="App">
-        <StartModal onClick={startGame} characters={characters} />
+        <EndModal onClick={startGame} scoreMillis={scoreMillis} />
         <Header characters={characters} />
         <GameBackground onClick={onBackgroundClick} />
       </div>

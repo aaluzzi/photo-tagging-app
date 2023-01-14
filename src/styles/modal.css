@@ -29,7 +29,7 @@
     font-size: 1.5rem;
   }
 
-  button.start {
+  button {
     font-size: 1.25rem;
     padding: 1rem 2rem;
     color: white;
@@ -39,6 +39,6 @@
     font-weight: bold;
   }
 
-  button.start:hover {
+  button:hover {
     filter: brightness(125%);
   }
