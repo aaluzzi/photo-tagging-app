@@ -1,15 +1,21 @@
 import '../styles/modal.css';
 
 function StartModal(props) {
-    return (
-        <div className="modal">
-            <div className="modal-content">
-                <div><b>How to Play</b></div>
-                <div>Find the given Pokemon as fast as possible! The assigned Pokemon will display at the top once you start. Good luck!</div>
-                {props.characters.length === 0 ? null : <button  className="start" onClick={props.onClick}>Start</button>}
+    if (props.characters.length > 0) {
+        return (
+            <div className="modal">
+                <div className="modal-content">
+                    <div className="title">How to Play</div>
+                    <div className="info">Search for the assigned Pokemon as fast as possible! When you find one, click it and select it in the context menu. Find all three to win. Good luck!</div>
+                    <div className="buttons">
+                        <button className="leaderboard" onClick={props.showLeaderboard}>Leaderboard</button>
+                        <button className="primary" onClick={props.startGame}>Start</button>
+                    </div>
+                </div>
             </div>
-        </div>
-    ); //TODO another solution?
+        );
+    }
+    return null;
 }
 
 export default StartModal;

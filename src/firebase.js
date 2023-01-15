@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 
-import { getFirestore, collection, getDocs, setDoc, doc, query, getDoc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, getDoc, setDoc, doc, query, orderBy, serverTimestamp} from 'firebase/firestore/lite';
 import {getAuth, signInAnonymously} from 'firebase/auth';
+import { getFormattedTime } from "./components/EndModal";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDfZ6x1npJrfWBZHKA6MhzxPD0lcdaEeYw",
@@ -69,12 +70,32 @@ async function getHighscoreDoc() {
     return {name: "", score: 99999999999};
 }
 
+async function getHighscoreDocs() {
+    let highscores = [];
+    try {
+        let docsSnap = await getDocs(query(collection(getFirestore(), 'highscores'), orderBy('score')));
+        docsSnap.forEach((highscore, index) => {
+            highscores.push({
+                position: (index + 1),
+                name: highscore.data().name,
+                score: getFormattedTime(highscore.data().score),
+                date: highscore.data().timestamp.toDate().toLocaleDateString()
+            });
+        });
+    } catch(error) {
+        console.error('Error reading score from Firebase Database', error);
+    }
+    return highscores;
+}
+
 async function submitHighscoreDoc(name, score) {
     try {
-        await setDoc(doc(getFirestore(), 'highscores', getAuth().currentUser.uid), {name, score});
+        await setDoc(doc(getFirestore(), 'highscores', getAuth().currentUser.uid), {name, score, timestamp: serverTimestamp()});
     } catch(error) {
         console.error('Error reading score from Firebase Database', error);
     }
 }
 
-export {fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc};
+getHighscoreDocs().then(docs => console.log(docs));
+
+export {fetchPokemon, signIn, getHighscoreDoc, getHighscoreDocs, submitHighscoreDoc};

@@ -3,7 +3,7 @@ import CharacterDisplay from './CharacterDisplay';
 function Header(props) {
     return (
         <div className="header">
-            <CharacterDisplay characters={props.characters} />
+            <CharacterDisplay status={props.status} characters={props.characters} />
         </div>
     ); 
 }

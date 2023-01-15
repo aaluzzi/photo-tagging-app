@@ -3,18 +3,20 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 import StartModal from './components/StartModal'
+import Leaderboard from './components/Leaderboard';
 import GameBackground from './components/GameBackground';
 import Header from './components/Header';
 import SelectBox from "./components/SelectBox";
 import EndModal from './components/EndModal';
 
-import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc} from './firebase';
+import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc, getHighscoreDocs} from './firebase';
 
 function App() {
   const [status, setStatus] = useState("intro");
   const [startTime, setStartTime] = useState(null);
   const [scoreMillis, setScoreMillis] = useState(0);
   const [highScore, setHighScore] = useState(null);
+  const [highScores, setHighScores] = useState([]);
   const [selection, setSelection] = useState({ visible: false });
   const [characters, setCharacters] = useState([]);
 
@@ -28,6 +30,14 @@ function App() {
         console.log(highScore);
       });
   }, [])
+
+  const showLeaderboard = () => {
+    getHighscoreDocs().then(docs => {
+      setHighScores(docs);
+    }).then(() => {
+      setStatus("leaderboard")
+    })
+  }
 
   const startGame = () => {
     setStatus("playing");
@@ -79,18 +89,19 @@ function App() {
     submitHighscoreDoc(name, newHighScore).then(() => console.log("success"));
   }
 
+  //TODO solve code duplication
   if (status === "intro") {
     return (
       <div className="App">
-        <StartModal onClick={startGame} characters={characters} />
-        <Header characters={characters} />
+        <StartModal showLeaderboard={showLeaderboard} startGame={startGame} characters={characters} />
+        <Header status={status} characters={characters} />
         <GameBackground onClick={onBackgroundClick} />
       </div>
     );
   } else if (status === "playing") {
     return (
       <div className="App">
-        <Header characters={characters} />
+        <Header status={status} characters={characters} />
         <GameBackground onClick={onBackgroundClick} />
         <SelectBox onClick={onSelectBoxSelect} characters={characters} visible={selection.visible} x={selection.boxX} y={selection.boxY} />
       </div>
@@ -99,36 +110,19 @@ function App() {
     return (
       <div className="App">
         <EndModal onSubmitHighScore={submitHighscore} scoreMillis={scoreMillis} highScore={highScore} />
-        <Header characters={characters} />
+        <Header status={status} characters={characters} />
+        <GameBackground onClick={onBackgroundClick} />
+      </div>
+    );
+  } else if (status === "leaderboard") { //TODO router?
+    return (
+      <div className="App">
+        <Leaderboard highScores={highScores} />
+        <Header status={status} characters={characters} />
         <GameBackground onClick={onBackgroundClick} />
       </div>
     );
   }
 }
-
-const CHARACTERS = [
-  {
-    name: "Squirtle",
-    found: false,
-    startX: 1050,
-    startY: 1180,
-    endX: 1105,
-    endY: 1285
-  }, {
-    name: "Flygon",
-    found: false,
-    startX: 265,
-    startY: 160,
-    endX: 435,
-    endY: 280
-  }, {
-    name: "Infernape",
-    found: false,
-    startX: 120,
-    startY: 1210,
-    endX: 300,
-    endY: 1330
-  }
-];
 
 export default App;
