@@ -28,7 +28,6 @@ function Pokemon(docData) {
 }
 
 async function fetchPokemon() {
-    console.log("fetching pokemon");
     const q = query(collection(getFirestore(), 'pokemon'))
 
     const querySnapshot = await getDocs(q);
@@ -83,7 +82,7 @@ async function getHighscoreDocs() {
             });
         });
     } catch(error) {
-        console.error('Error reading score from Firebase Database', error);
+        console.error('Error reading scores from Firebase Database', error);
     }
     return highscores;
 }
@@ -92,10 +91,8 @@ async function submitHighscoreDoc(name, score) {
     try {
         await setDoc(doc(getFirestore(), 'highscores', getAuth().currentUser.uid), {name, score, timestamp: serverTimestamp()});
     } catch(error) {
-        console.error('Error reading score from Firebase Database', error);
+        console.error('Error submitting score to Firebase Database', error);
     }
 }
-
-getHighscoreDocs().then(docs => console.log(docs));
 
 export {fetchPokemon, signIn, getHighscoreDoc, getHighscoreDocs, submitHighscoreDoc};

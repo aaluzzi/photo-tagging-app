@@ -17,7 +17,7 @@ function EndModal(props) {
                     <form onSubmit={(e) => {
                         props.onSubmitHighScore(name, props.scoreMillis);
                     }}>
-                        <input onChange={onNameChange} type="text" placeholder="Name" maxlength="22" value={name} required></input>
+                        <input onChange={onNameChange} type="text" placeholder="Name" maxLength="22" value={name} required></input>
                         <button className="primary" type="submit">Submit</button>
                     </form>
                 </div>

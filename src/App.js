@@ -9,7 +9,7 @@ import Header from './components/Header';
 import SelectBox from "./components/SelectBox";
 import EndModal from './components/EndModal';
 
-import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc, getHighscoreDocs} from './firebase';
+import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc, getHighscoreDocs } from './firebase';
 
 function App() {
   const [status, setStatus] = useState("intro");
@@ -35,7 +35,7 @@ function App() {
     getHighscoreDocs().then(docs => {
       setHighScores(docs);
     }).then(() => {
-      setStatus("leaderboard")
+      setStatus("leaderboard");
     })
   }
 
@@ -45,14 +45,23 @@ function App() {
   }
 
   const onBackgroundClick = (e) => {
+    //make sure select menu doesnt go off screen
+    let boxX = e.pageX + 5;
+    let boxY = e.pageY + 5;
+    if (e.clientX + 115 > e.view.innerWidth) {
+      boxX -= 115;
+    }
+    if (e.clientY + 130 > e.view.innerHeight) {
+      boxY -= 130;
+    }
     setSelection({
       visible: true,
       x: e.nativeEvent.offsetX,
       y: e.nativeEvent.offsetY,
       backgroundWidth: e.target.width - e.target.offsetLeft, //TODO move these elsewhere?
       backgroundHeight: e.target.height,
-      boxX: e.pageX + 5,
-      boxY: e.pageY + 5
+      boxX: boxX,
+      boxY: boxY
     });
   }
 
@@ -86,43 +95,19 @@ function App() {
   }, [characters])
 
   const submitHighscore = (name, newHighScore) => {
-    submitHighscoreDoc(name, newHighScore).then(() => console.log("success"));
+    submitHighscoreDoc(name, newHighScore);
   }
 
-  //TODO solve code duplication
-  if (status === "intro") {
-    return (
-      <div className="App">
-        <StartModal showLeaderboard={showLeaderboard} startGame={startGame} characters={characters} />
-        <Header status={status} characters={characters} />
-        <GameBackground onClick={onBackgroundClick} />
-      </div>
-    );
-  } else if (status === "playing") {
-    return (
-      <div className="App">
-        <Header status={status} characters={characters} />
-        <GameBackground onClick={onBackgroundClick} />
-        <SelectBox onClick={onSelectBoxSelect} characters={characters} visible={selection.visible} x={selection.boxX} y={selection.boxY} />
-      </div>
-    );
-  } else if (status === "ended") {
-    return (
-      <div className="App">
-        <EndModal onSubmitHighScore={submitHighscore} scoreMillis={scoreMillis} highScore={highScore} />
-        <Header status={status} characters={characters} />
-        <GameBackground onClick={onBackgroundClick} />
-      </div>
-    );
-  } else if (status === "leaderboard") { //TODO router?
-    return (
-      <div className="App">
-        <Leaderboard highScores={highScores} />
-        <Header status={status} characters={characters} />
-        <GameBackground onClick={onBackgroundClick} />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <Header status={status} characters={characters} />
+      <GameBackground onClick={onBackgroundClick} />
+      {status === "leaderboard" ? <Leaderboard highScores={highScores} /> : null}
+      {status === "intro" ? <StartModal showLeaderboard={showLeaderboard} startGame={startGame} characters={characters} /> : null}
+      {status === "playing" ? <SelectBox onClick={onSelectBoxSelect} characters={characters} visible={selection.visible} x={selection.boxX} y={selection.boxY} /> : null}
+      {status === "ended" ? <EndModal onSubmitHighScore={submitHighscore} scoreMillis={scoreMillis} highScore={highScore} /> : null}
+    </div>
+  );
 }
 
 export default App;

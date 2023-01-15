@@ -34,7 +34,6 @@ html, body {
   min-height: 100%;
   aspect-ratio: 1;
   background-size: cover;
-  /* border: 1px solid white; */
 }
 
 .found {
@@ -49,15 +48,20 @@ img {
 .select-box {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   color: white;
-  border-radius: 1rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  height: 125px;
+  width: 105px;
 }
 
 .select-box-item {
   background-color: rgba(37, 37, 37, 0.95);
-  padding: 1rem 1rem;
+  padding: 0rem 1rem;
   user-select: none;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .select-box-item:hover {
