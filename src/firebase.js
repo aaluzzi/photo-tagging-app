@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 
-import { getFirestore, collection, getDocs, getDoc, setDoc, doc, query, orderBy, serverTimestamp} from 'firebase/firestore/lite';
+import { getFirestore, collection, addDoc, getDocs, getDoc, setDoc, doc, query, orderBy, serverTimestamp} from 'firebase/firestore/lite';
 import {getAuth, signInAnonymously} from 'firebase/auth';
 import { getFormattedTime } from "./components/EndModal";
+import seedrandom from "seedrandom";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDfZ6x1npJrfWBZHKA6MhzxPD0lcdaEeYw",
@@ -27,31 +28,32 @@ function Pokemon(docData) {
     }
 }
 
-async function fetchPokemon() {
-    const q = query(collection(getFirestore(), 'pokemon'))
-
-    const querySnapshot = await getDocs(q);
-
-    //generate 3 unique indexes;
-    //TODO make this seeded (new seed every minute or something)
-    const randomIndexes = [];
-    while (randomIndexes.length < 3) {
-        const index = Math.floor(Math.random() * querySnapshot.docs.length);
-        if (!randomIndexes.includes(index)) {
-            randomIndexes.push(index);
-        }
-    }
-    return randomIndexes.map(index => Pokemon(querySnapshot.docs.at(index).data()));
+function createPokemon(pokemonName, startX, startY, endX, endY) {
+    return {name:pokemonName, startCoords: [startX, startY], endCoords: [endX, endY]};
 }
 
-/*async function savePokemon(pokemon) {
+async function fetchPokemon() {
+    let rng = seedrandom(Math.floor(Date.now() / 10000));
+    const snapshotEasyPokemon = await getDocs(query(collection(getFirestore(), 'pokemon_easy')));
+    const snapshotMediumPokemon = await getDocs(query(collection(getFirestore(), 'pokemon_medium')));
+    const snapshotHardPokemon = await getDocs(query(collection(getFirestore(), 'pokemon_hard')));
+
+    return [
+        Pokemon(snapshotEasyPokemon.docs.at(Math.floor(rng() * snapshotEasyPokemon.docs.length)).data()),
+        Pokemon(snapshotMediumPokemon.docs.at(Math.floor(rng() * snapshotMediumPokemon.docs.length)).data()),
+        Pokemon(snapshotHardPokemon.docs.at(Math.floor(rng() * snapshotHardPokemon.docs.length)).data()),
+    ];
+}
+
+async function savePokemon(pokemon, difficulty) {
+    console.log(pokemon);
     try {
-        await addDoc(collection(getFirestore(), 'pokemon'), pokemon);
+        await setDoc(doc(getFirestore(), `pokemon_` + difficulty, pokemon.name), pokemon);
         console.log("success");
       } catch(error) {
         console.error('Error writing new message to Firebase Database', error);
       }
-}*/
+}
 
 async function signIn() {
     await signInAnonymously(getAuth());
@@ -95,4 +97,4 @@ async function submitHighscoreDoc(name, score) {
     }
 }
 
-export {fetchPokemon, signIn, getHighscoreDoc, getHighscoreDocs, submitHighscoreDoc};
+export {createPokemon, savePokemon, fetchPokemon, signIn, getHighscoreDoc, getHighscoreDocs, submitHighscoreDoc};

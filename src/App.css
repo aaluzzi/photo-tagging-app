@@ -51,13 +51,12 @@ img {
   color: white;
   border-radius: 0.75rem;
   overflow: hidden;
-  height: 125px;
   width: 105px;
 }
 
 .select-box-item {
   background-color: rgba(37, 37, 37, 0.95);
-  padding: 0rem 1rem;
+  padding: 0.5rem 1rem;
   user-select: none;
   flex: 1;
   display: flex;

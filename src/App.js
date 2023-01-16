@@ -9,7 +9,7 @@ import Header from './components/Header';
 import SelectBox from "./components/SelectBox";
 import EndModal from './components/EndModal';
 
-import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc, getHighscoreDocs } from './firebase';
+import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc, getHighscoreDocs} from './firebase';
 
 function App() {
   const [status, setStatus] = useState("intro");
@@ -25,10 +25,7 @@ function App() {
     fetchPokemon().then(pokemon => setCharacters(pokemon));
     signIn()
       .then(() => getHighscoreDoc())
-      .then(highScore => {
-        setHighScore(highScore);
-        console.log(highScore);
-      });
+      .then(highScore => setHighScore(highScore));
   }, [])
 
   const showLeaderboard = () => {
@@ -54,6 +51,9 @@ function App() {
     if (e.clientY + 130 > e.view.innerHeight) {
       boxY -= 130;
     }
+    console.log(Math.floor(e.nativeEvent.offsetX / e.target.width * e.target.naturalWidth));
+    console.log(Math.floor(e.nativeEvent.offsetY / e.target.height * e.target.naturalHeight));
+    console.log("-");
     setSelection({
       visible: true,
       x: e.nativeEvent.offsetX,
@@ -66,8 +66,8 @@ function App() {
   }
 
   const hasSelectedCharacter = (character) => {
-    const xOnOriginalImage = (selection.x / selection.backgroundWidth) * 1788; //image width, hardcoded for now
-    const yOnOriginalImage = (selection.y / selection.backgroundHeight) * 1615; //image height, hardcoded for now
+    const xOnOriginalImage = (selection.x / selection.backgroundWidth) * 2400; //image width, hardcoded for now
+    const yOnOriginalImage = (selection.y / selection.backgroundHeight) * 3450; //image height, hardcoded for now
 
     return xOnOriginalImage >= character.startX && xOnOriginalImage <= character.endX
       && yOnOriginalImage >= character.startY && yOnOriginalImage <= character.endY
@@ -80,7 +80,8 @@ function App() {
         if (character === selectedCharacter) {
           return { ...character, found: true }
         } else {
-          return { ...character, found: true }; //TODO replace
+          return character;
+          //return { ...character, found: true };
         }
       }));
     }
