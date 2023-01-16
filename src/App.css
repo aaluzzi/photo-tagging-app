@@ -1,17 +1,50 @@
-html, body {
-  background-color: #010101;
-}
+@import url('https://fonts.cdnfonts.com/css/pokemon-solid');
 
 .header {
   position: fixed;
-  height: 5rem;
+  height: 80px;
   width: 100%;
   font-size: 1rem;
   background-color: #252525;
+  
+  z-index: 1;
+}
+
+.content {
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 1;
+  justify-content: space-between;
+  margin: 0 25px;
+}
+
+.container {
+  margin: 0;
+  height: 100%;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pokeball {
+  height: 50px;
+  width: 50px;
+  margin: 0;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo {
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  font-size: 1.5rem;
+  height: 100%;
+  white-space: nowrap;
 }
 
 .characters {
