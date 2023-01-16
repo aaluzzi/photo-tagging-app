@@ -15,6 +15,7 @@ function EndModal(props) {
                     <div>You finished in {getFormattedTime(props.scoreMillis)}!<b> New high score!</b></div>
                     <div>Enter your name and submit it to the leaderboard:</div>
                     <form onSubmit={(e) => {
+                        e.preventDefault();
                         props.onSubmitHighScore(name, props.scoreMillis);
                     }}>
                         <input onChange={onNameChange} type="text" placeholder="Name" maxLength="22" value={name} required></input>

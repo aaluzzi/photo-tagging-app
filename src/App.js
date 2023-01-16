@@ -51,9 +51,9 @@ function App() {
     if (e.clientY + 130 > e.view.innerHeight) {
       boxY -= 130;
     }
-    console.log(Math.floor(e.nativeEvent.offsetX / e.target.width * e.target.naturalWidth));
-    console.log(Math.floor(e.nativeEvent.offsetY / e.target.height * e.target.naturalHeight));
-    console.log("-");
+    //console.log(Math.floor(e.nativeEvent.offsetX / e.target.width * e.target.naturalWidth));
+    //console.log(Math.floor(e.nativeEvent.offsetY / e.target.height * e.target.naturalHeight));
+    //console.log("-");
     setSelection({
       visible: true,
       x: e.nativeEvent.offsetX,
@@ -96,7 +96,8 @@ function App() {
   }, [characters])
 
   const submitHighscore = (name, newHighScore) => {
-    submitHighscoreDoc(name, newHighScore);
+    submitHighscoreDoc(name, newHighScore)
+      .then(() => showLeaderboard());
   }
 
   return (

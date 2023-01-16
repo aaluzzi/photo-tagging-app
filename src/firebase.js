@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 
-import { getFirestore, collection, addDoc, getDocs, getDoc, setDoc, doc, query, orderBy, serverTimestamp} from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, getDoc, setDoc, doc, query, orderBy, serverTimestamp} from 'firebase/firestore';
 import {getAuth, signInAnonymously} from 'firebase/auth';
 import { getFormattedTime } from "./components/EndModal";
 import seedrandom from "seedrandom";
@@ -75,13 +75,15 @@ async function getHighscoreDocs() {
     let highscores = [];
     try {
         let docsSnap = await getDocs(query(collection(getFirestore(), 'highscores'), orderBy('score')));
-        docsSnap.forEach((highscore, index) => {
+        let index = 0;
+        docsSnap.forEach((highscore) => {
             highscores.push({
                 position: (index + 1),
                 name: highscore.data().name,
                 score: getFormattedTime(highscore.data().score),
                 date: highscore.data().timestamp.toDate().toLocaleDateString()
             });
+            index++;
         });
     } catch(error) {
         console.error('Error reading scores from Firebase Database', error);

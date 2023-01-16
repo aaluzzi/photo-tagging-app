@@ -1,4 +1,4 @@
-import Background from '../background.png'
+import Background from '../background.webp'
 
 function GameBackground(props) {
     return (
