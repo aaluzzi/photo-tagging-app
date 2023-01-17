@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 
 import { useEffect, useState } from 'react';
 
@@ -17,7 +17,7 @@ function App() {
   const [scoreMillis, setScoreMillis] = useState(0);
   const [highScore, setHighScore] = useState(null);
   const [highScores, setHighScores] = useState([]);
-  const [selection, setSelection] = useState({ visible: false });
+  const [selection, setSelection] = useState({ visible: false, boxX: 0, boxY: 0 });
   const [characters, setCharacters] = useState([]);
 
   //only triggers on doc load
@@ -43,17 +43,16 @@ function App() {
 
   const onBackgroundClick = (e) => {
     //make sure select menu doesnt go off screen
-    let boxX = e.pageX + 5;
-    let boxY = e.pageY + 5;
-    if (e.clientX + 115 > e.view.innerWidth) {
-      boxX -= 115;
+    let boxX = e.pageX + 3;
+    let boxY = e.pageY + 3;
+    let boxWidth = document.getElementById("select-box").offsetWidth;
+    let boxHeight = document.getElementById("select-box").offsetHeight;
+    if (boxX + boxWidth > e.target.width) {
+      boxX -= boxWidth;
     }
-    if (e.clientY + 130 > e.view.innerHeight) {
-      boxY -= 130;
+    if (boxY + boxHeight > e.target.height) {
+      boxY -= boxHeight;
     }
-    //console.log(Math.floor(e.nativeEvent.offsetX / e.target.width * e.target.naturalWidth));
-    //console.log(Math.floor(e.nativeEvent.offsetY / e.target.height * e.target.naturalHeight));
-    //console.log("-");
     setSelection({
       visible: true,
       x: e.nativeEvent.offsetX,

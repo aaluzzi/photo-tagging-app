@@ -13,12 +13,12 @@ function EndModal(props) {
                 <div className="modal-content">
                     <div className="title">Pokemon Found</div>      
                     <div>You finished in {getFormattedTime(props.scoreMillis)}!<b> New high score!</b></div>
-                    <div>Enter your name and submit it to the leaderboard:</div>
+                    <div>Enter your username and submit it to the leaderboard:</div>
                     <form onSubmit={(e) => {
                         e.preventDefault();
                         props.onSubmitHighScore(name, props.scoreMillis);
                     }}>
-                        <input onChange={onNameChange} type="text" placeholder="Name" maxLength="22" value={name} required></input>
+                        <input onChange={onNameChange} type="text" placeholder="Username" maxLength="16" value={name} required></input>
                         <button className="primary" type="submit">Submit</button>
                     </form>
                 </div>

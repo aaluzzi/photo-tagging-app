@@ -1,13 +1,13 @@
 .modal {
     position: fixed;
-    z-index: 2;
+    z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.6);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(3px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,7 +73,6 @@
   }
 
   table {
-    width: 100%;
     font-size: 1rem;
     border-collapse: collapse;
   }
@@ -83,6 +82,6 @@
   }
 
   th,td {
-    padding: 0.25rem 1.5rem;
+    padding: 0.25rem min(1.5rem, 2vw);
   }
   
