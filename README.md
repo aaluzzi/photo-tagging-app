@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Photo Tagging App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[Live Deployment](https://find-that-pokemon-da0dc.web.app/)
 
 ## Available Scripts
 
