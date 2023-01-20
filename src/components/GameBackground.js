@@ -2,7 +2,7 @@ import Background from '../background.webp'
 
 function GameBackground(props) {
     return (
-        <img onClick={props.onClick} src={Background} alt="Game background"/>
+        <img id="background" onClick={props.onClick} src={Background} alt="Game background"/>
     );
 }
 
