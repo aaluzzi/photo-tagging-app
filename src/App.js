@@ -6,7 +6,6 @@ import StartModal from './components/StartModal'
 import Leaderboard from './components/Leaderboard';
 import GameBackground from './components/GameBackground';
 import Header from './components/Header';
-import SelectBox from "./components/SelectBox";
 import EndModal from './components/EndModal';
 
 import { fetchPokemon, signIn, getHighscoreDoc, submitHighscoreDoc, getHighscoreDocs} from './firebase';
@@ -17,7 +16,6 @@ function App() {
   const [scoreMillis, setScoreMillis] = useState(0);
   const [highScore, setHighScore] = useState(null);
   const [highScores, setHighScores] = useState([]);
-  const [selection, setSelection] = useState({ visible: false, boxX: 0, boxY: 0 });
   const [characters, setCharacters] = useState([]);
 
   //only triggers on doc load
@@ -41,52 +39,6 @@ function App() {
     setStartTime(Date.now());
   }
 
-  const onBackgroundClick = (e) => {
-    //make sure select menu doesnt go off screen
-    let boxX = e.pageX + 3;
-    let boxY = e.pageY + 3;
-    let boxWidth = document.getElementById("select-box").offsetWidth;
-    let boxHeight = document.getElementById("select-box").offsetHeight;
-    if (boxX + boxWidth > e.target.width) {
-      boxX -= boxWidth;
-    }
-    if (boxY + boxHeight > e.target.height) {
-      boxY -= boxHeight;
-    }
-    setSelection({
-      visible: true,
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
-      backgroundWidth: e.target.width - e.target.offsetLeft, //TODO move these elsewhere?
-      backgroundHeight: e.target.height,
-      boxX: boxX,
-      boxY: boxY
-    });
-  }
-
-  const hasSelectedCharacter = (character) => {
-    const xOnOriginalImage = (selection.x / selection.backgroundWidth) * 2400; //image width, hardcoded for now
-    const yOnOriginalImage = (selection.y / selection.backgroundHeight) * 3450; //image height, hardcoded for now
-
-    return xOnOriginalImage >= character.startX && xOnOriginalImage <= character.endX
-      && yOnOriginalImage >= character.startY && yOnOriginalImage <= character.endY
-  };
-
-  const onSelectBoxSelect = (characterName) => {
-    const selectedCharacter = characters.find(character => character.name === characterName);
-    if (hasSelectedCharacter(selectedCharacter)) {
-      setCharacters(characters.map(character => {
-        if (character === selectedCharacter) {
-          return { ...character, found: true }
-        } else {
-          return character;
-          //return { ...character, found: true };
-        }
-      }));
-    }
-    setSelection({ ...selection, visible: false });
-  }
-
   useEffect(() => {
     if (status === "playing" && characters.every(character => character.found)) {
       setScoreMillis(Date.now() - startTime);
@@ -94,18 +46,27 @@ function App() {
     }
   }, [characters])
 
+  const findCharacter = (foundCharacter) => {
+    setCharacters(characters.map(character => {
+      if (character === foundCharacter) {
+        return { ...character, found: true }
+      } else {
+        return character;
+      }
+    }));
+  }
+
   const submitHighscore = (name, newHighScore) => {
     submitHighscoreDoc(name, newHighScore)
       .then(() => showLeaderboard());
   }
-
+  //{status === "playing" ? <SelectBox onClick={onSelectBoxSelect} characters={characters} visible={selection.visible} x={selection.boxX} y={selection.boxY} /> : null}
   return (
     <div className="App">
       <Header status={status} characters={characters} />
-      <GameBackground onClick={onBackgroundClick} />
+      <GameBackground characters={characters} findCharacter={findCharacter} />
       {status === "leaderboard" ? <Leaderboard highScores={highScores} /> : null}
       {status === "intro" ? <StartModal showLeaderboard={showLeaderboard} startGame={startGame} characters={characters} /> : null}
-      {status === "playing" ? <SelectBox onClick={onSelectBoxSelect} characters={characters} visible={selection.visible} x={selection.boxX} y={selection.boxY} /> : null}
       {status === "ended" ? <EndModal onSubmitHighScore={submitHighscore} scoreMillis={scoreMillis} highScore={highScore} /> : null}
     </div>
   );
