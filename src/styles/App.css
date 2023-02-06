@@ -12,6 +12,7 @@ html, body {
   position: fixed;
   height: min(80px, 15vmin);
   width: 100%;
+  color: white;
   font-size: 1rem;
   background-color: #252525;
   z-index: 2;
@@ -22,16 +23,12 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 20px;
+  margin: 0 15px;
 }
 
-.container {
-  margin: 0;
-  height: 100%;
-  max-width: 1000px;
+.content > div {
+  flex: 1 0 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .pokeball {
@@ -40,40 +37,45 @@ html, body {
   margin: 0;
 }
 
-.left {
+#logo {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.logo {
-  color: rgb(255, 255, 255);
+.logo-text {
   font-weight: bold;
   font-size: 1.5rem;
   height: 100%;
   white-space: nowrap;
 }
 
-.characters {
-  display: flex;
-  color: white;
-  font-size: 100%;
-  gap: 1rem;
+#characters {
+  justify-content: space-around;
   height: 100%;
 }
 
-@media(max-width: 750px) {  
-  .left {
+#stopwatch {
+  font-weight: bold;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  letter-spacing: 0.1rem;
+}
+
+@media(max-width: 1100px) { 
+  #stopwatch {
     display: none;
   }
+}
 
+@media(max-width: 750px) {  
   .content {
-    margin: 0;
-    justify-content: center;
+    margin: 0 5px;
   }
 
-  .characters {
-    gap: 0;
+  #logo {
+    display: none;
   }
 }
 

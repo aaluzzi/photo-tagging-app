@@ -1,18 +1,33 @@
 import CharacterDisplay from './CharacterDisplay';
+import Stopwatch from './Stopwatch';
 
 import Pokeball from '../pokeball.svg';
 
 function Header(props) {
-    return (
-        <div className="header">
-            <div className="content">
-                <div className="left">
-                    <img className="pokeball" src={Pokeball} alt="Pokeball"/>
-                    <div className="logo">Find That Pokemon</div>
+    if (props.status === "playing") {
+        return (
+            <div className="header">
+                <div className="content">
+                    <div id="logo">
+                        <img className="pokeball" src={Pokeball} alt="Pokeball"/>
+                        <div className="logo-text">Find That Pokemon</div>
+                    </div>
+                    <CharacterDisplay characters={props.characters} />
+                    <Stopwatch />    
                 </div>
-                <CharacterDisplay status={props.status} characters={props.characters} />
             </div>
-        </div>
-    ); 
+        ); 
+    } else {
+        return (
+            <div className="header">
+                <div className="content">
+                    <div id="logo">
+                        <img className="pokeball" src={Pokeball} alt="Pokeball"/>
+                        <div className="logo-text">Find That Pokemon</div>
+                    </div>
+                </div>
+            </div>
+        ); 
+    }
 }
 export default Header;

@@ -1,14 +1,11 @@
 import CharacterInfo from "./CharacterInfo";
 
 function CharacterDisplay(props) {
-    if (props.status === "playing") {
-        return (
-            <div className="characters">
-                {props.characters.map(character => <CharacterInfo character={character} />)}
-            </div>
-        );
-    }
-    return null;
+    return (
+        <div id="characters">
+            {props.characters.map(character => <CharacterInfo character={character} />)}
+        </div>
+    );
 }
 
 export default CharacterDisplay;
