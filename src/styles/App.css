@@ -2,8 +2,7 @@ html, body {
   margin: 0;
   background-color: #252525;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -13,34 +12,29 @@ html, body {
   height: min(80px, 15vmin);
   width: 100%;
   color: white;
-  font-size: 1rem;
   background-color: #252525;
   z-index: 2;
-}
-
-.content {
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 15px;
 }
 
-.content > div {
+.header > div {
   flex: 1 0 0;
   display: flex;
+}
+
+#logo {
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .pokeball {
   height: 50px;
   width: 50px;
   margin: 0;
-}
-
-#logo {
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 
 .logo-text {
@@ -55,30 +49,6 @@ html, body {
   height: 100%;
 }
 
-#stopwatch {
-  font-weight: bold;
-  font-size: 1.5rem;
-  display: flex;
-  justify-content: flex-end;
-  letter-spacing: 0.1rem;
-}
-
-@media(max-width: 1100px) { 
-  #stopwatch {
-    display: none;
-  }
-}
-
-@media(max-width: 750px) {  
-  .content {
-    margin: 0 5px;
-  }
-
-  #logo {
-    display: none;
-  }
-}
-
 .character-info {
   display: flex;
   align-items: center;
@@ -86,13 +56,40 @@ html, body {
 }
 
 .sprite {
-  margin: 0;
   height: 100%;
-  width: auto;
 }
 
 .found {
   filter: brightness(50%);
+}
+
+#stopwatch {
+  font-weight: bold;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  letter-spacing: 0.1rem;
+  margin-right: 15px;
+}
+
+@media(max-width: 1100px) { 
+  #stopwatch {
+    display: none;
+  }
+
+  #characters {
+    margin-right: 15px;
+  }
+}
+
+@media(max-width: 750px) {  
+  #logo {
+    display: none;
+  }
+
+  #characters {
+    margin: 0;
+  }
 }
 
 #background {
@@ -119,5 +116,5 @@ html, body {
 }
 
 .select-box-item:hover {
-  filter: brightness(125%);
+  filter: brightness(130%);
 }
